@@ -1,5 +1,7 @@
 package com.accela.pianoforte.routes;
 
+import com.accela.pianoforte.model.Credentials;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.slf4j.Logger;
@@ -22,6 +24,8 @@ public class PaymentRoute extends RouteBuilder {
 
         from("direct:payment-checkout").routeId("checkout")
                 .process(processors::toRedirectQuery)
+                .process(exch ->
+                        logger.info("respond to to client => "+exch.getIn().getBody(String.class)))
                 .setHeader(CONTENT_TYPE, constant(APPLICATION_JSON));
 
         from("direct:payment-response")
@@ -38,6 +42,12 @@ public class PaymentRoute extends RouteBuilder {
 
         from("direct:transaction-query")
                 .process(processors::lookupResponse)
+                .marshal().json(JsonLibrary.Jackson)
+                .setHeader(CONTENT_TYPE, constant(APPLICATION_JSON));
+
+
+        from("direct:get-credentials")
+                .process(processors::getCredentials)
                 .marshal().json(JsonLibrary.Jackson)
                 .setHeader(CONTENT_TYPE, constant(APPLICATION_JSON));
     }

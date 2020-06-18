@@ -28,10 +28,16 @@ public class ApiRoute extends RouteBuilder {
         rest("/").id("home")
                 .get("/checkout")
                     .to("direct:checkout-page")
+                .get("/credentials")
+                    .to("direct:get-credentials")
+                .get("/checkout2")
+                    .to("direct:checkout2-page")
                 .get("/checkout/complete/{id}")
                     .to("direct:completed-page")
                 .get("/checkout/failure")
                     .to("direct:failure-page")
+                .get("/scripts/{name}")
+                    .to("direct:scripts")
                 .get("/image/{name}")
                     .to("direct:images")
                 .get("/css/{name}")
@@ -50,6 +56,11 @@ public class ApiRoute extends RouteBuilder {
                 .setHeader(CONTENT_TYPE, constant(TEXT_HTML.toString()))
                 .process(ApiRoute::streamAsset);
 
+        from("direct:checkout2-page")
+                .setProperty("asset", constant("pages/checkoutv2.html"))
+                .setHeader(CONTENT_TYPE, constant(TEXT_HTML.toString()))
+                .process(ApiRoute::streamAsset);
+
         from("direct:completed-page")
                 .setProperty("asset", simple("pages/completedPage.html"))
                 .setHeader(CONTENT_TYPE, constant(TEXT_HTML.toString()))
@@ -59,6 +70,11 @@ public class ApiRoute extends RouteBuilder {
                 .setProperty("asset", constant("pages/failedPage.html"))
                 .setHeader(CONTENT_TYPE, constant(TEXT_HTML.toString()))
                 .process(ApiRoute::streamAsset);
+
+        from("direct:scripts")
+            .setProperty("asset", simple("scripts/${header.name}"))
+            .setHeader(CONTENT_TYPE, constant("text/javascript"))
+            .process(ApiRoute::streamAsset);
 
         from("direct:images")
                 .setProperty("asset", simple("assets/${header.name}"))

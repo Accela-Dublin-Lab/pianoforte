@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/pianoforte/css/form.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/pianoforte/scripts/jsonpath-0.8.0.js"></script>
     <title>Checkout Page</title>
 </head>
 <body>
@@ -47,7 +48,8 @@
             </tbody>
         </table>
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="panel panel-default">
+            <div id="frame-location"></div>
+            <div id="main-frame" class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-12 alert alert-info">
@@ -166,12 +168,58 @@
 </div>
 
 <script type="text/javascript">
+
     function doRedirect() {
         return function (response) {
+            let frame = document.createElement("IFRAME");
+            frame.setAttribute('id', 'redirect-frame');
+            frame.setAttribute('name', 'redirect-frame');
+            frame.setAttribute('src', "");
+            frame.setAttribute('class', "fill");
+
+            const frameDiv = document.getElementById('frame-location');
+            frameDiv.append(frame);
+            const formDiv = document.getElementById('main-frame');
+            formDiv.style.display = 'none';
+
+            let removeFrame = function () {
+                frameDiv.removeChild(frame);
+                formDiv.style.display = 'block';
+            };
+
+            window.addEventListener('message', function (event) {
+                const key = event.message ? 'message' : 'data';
+                const data = event[key];
+                let eventType = jsonPath(JSON.parse(data),
+                    response.events.queries.eventType).toString();
+
+                switch(eventType) {
+                    case response.events.states.cancel:
+                        console.log("Abort");
+                        removeFrame();
+                        break;
+                    case response.events.states.failure:
+                        console.log("Failed");
+                        removeFrame();
+                        break;
+                    case response.events.states.success:
+                        console.log("Success");
+                        removeFrame();
+                        break;
+                    case response.events.states.ready:
+                        console.log("Begin payment method: " + JSON.parse(data)['method']);
+                        break;
+                    default:
+                        console.log("default? " + eventType);
+                        removeFrame();
+                }
+            });
+
             let form = document.createElement("FORM");
             form.setAttribute('method', response.method);
-            form.setAttribute('action', response.url);
             form.setAttribute('enctype', response.contentType);
+            form.setAttribute('action', response.url);
+            form.setAttribute('target', 'redirect-frame');
             response.data.forEach(function (item) {
                 let input = document.createElement('input');
                 let keys = Object.keys(item);
@@ -230,6 +278,26 @@
             }
         });
     });
+
+    $(window).on("message onmessage", function(e) {
+        try {
+            const data = JSON.parse(e.originalEvent.data);
+            console.log('message', data);
+            if (data.event === 'begin') {
+                // do something when the begin message is received
+            } else if (data.event === 'failure') {
+                // show an error message
+            } else if (data.event === 'abort') {
+                // handle abort, (likely just close )
+            } else if (data.event === 'success') {
+                // handle success and close
+            }
+        } catch ( error ){
+            console.log('message error', error);
+            // handle a parse error
+        }
+    });
+
     function clearForm() {
         $("#payment-form").trigger("reset");
     }

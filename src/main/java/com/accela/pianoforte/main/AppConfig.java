@@ -6,10 +6,10 @@ import java.util.Properties;
 
 public class AppConfig {
     public static final String CHECKOUT_URL = "checkout-url";
-    public static final String SECURITY_KEY = "security-key";
     public static final String API_VERSION = "api-version";
-    public static final String API_LOGIN_ID = "api-login-id";
-    public static final String TRANSACTION_CCARD_SALE = "transaction-ccard-sale";
+    public static final String API_LOCATION_ID = "api-location-id";
+    public static final String API_ACCESS_KEY = "api-access-key";
+    public static final String API_SECURE_KEY = "api-secure-key";
     public static final String REST_CONTEXT_PATH = "rest-context-path";
     public static final String REST_SERVER_HOST = "rest-server-host";
     public static final String REST_LOCAL_PORT = "rest-local-port";
@@ -34,18 +34,21 @@ public class AppConfig {
         return appProps.getProperty(CHECKOUT_URL, "");
     }
 
-    public String getApiLoginId() {
-        return appProps.getProperty(API_LOGIN_ID, "");
-    }
-
-    public String getSecurityKey() {
-        return appProps.getProperty(SECURITY_KEY, "");
+    public String getApiLocationId() {
+        return appProps.getProperty(API_LOCATION_ID, "");
     }
 
     public String getApiVersion() {
         return appProps.getProperty(API_VERSION, "");
     }
 
+    public String getApiAccessKey() {
+        return appProps.getProperty(API_ACCESS_KEY, "");
+    }
+
+    public String getApiSecureKey() {
+        return appProps.getProperty(API_SECURE_KEY, "");
+    }
     public String mapTransactionType(final String code) {
         return appProps.getProperty("forte.transaction.code."+code,"");
     }

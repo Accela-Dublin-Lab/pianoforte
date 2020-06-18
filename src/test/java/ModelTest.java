@@ -31,10 +31,10 @@ public class ModelTest {
                         entry -> urldecoder.apply(entry.getValue())));
         final Instrument.InstrumentBuilder ccBuilder = Instrument.builder()
                 .type("CC")
-                .number(Integer.parseInt(headers.get("pg_last4")))
+                .number(parseInt(headers.get("pg_last4")))
                 .expiryDate(YearMonth.of(
-                        Integer.parseInt(headers.get("pg_payment_card_expdate_year")),
-                        Integer.parseInt(headers.get("pg_payment_card_expdate_month"))))
+                        parseInt(headers.get("pg_payment_card_expdate_year")),
+                        parseInt(headers.get("pg_payment_card_expdate_month"))))
                 .issuer(headers.get("pg_payment_card_type"));
         final PaymentOutcome.PaymentOutcomeBuilder outcomeBuilder = PaymentOutcome.builder()
                 .responseText(headers.get("pg_response_description"))
@@ -72,6 +72,7 @@ public class ModelTest {
                 .put("pg_payment_card_expdate_month", "12")
                 .put("pg_payment_card_expdate_year", "2020")
                 .put("pg_payment_card_type", "visa").build();
+
         final Instrument.InstrumentBuilder builder = Instrument.builder()
                 .number(parseInt(data.get("pg_last4")))
                 .type("EC");
@@ -80,8 +81,7 @@ public class ModelTest {
                 Option.of(data.get("pg_payment_card_expdate_month")),
                 Option.of(data.get("pg_payment_card_type"))
         ).yield((year, month, issuer) ->
-                builder.expiryDate(YearMonth.of(
-                        Integer.parseInt(year), Integer.parseInt(month)))
+                builder.expiryDate(YearMonth.of(parseInt(year), parseInt(month)))
                         .issuer(issuer)
                         .type("CC")
                         .build()

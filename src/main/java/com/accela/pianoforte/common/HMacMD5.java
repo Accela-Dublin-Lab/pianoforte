@@ -15,7 +15,7 @@ public class HMacMD5 {
 			final Mac mac = Mac.getInstance(ALGORITHM);
 			mac.init(new SecretKeySpec(keyString.getBytes(StandardCharsets.UTF_8), ALGORITHM));
 			return DatatypeConverter.printHexBinary(
-					mac.doFinal(data.getBytes(StandardCharsets.US_ASCII)));
+					mac.doFinal(data.getBytes(StandardCharsets.US_ASCII))).toLowerCase();
 		}).get();
 	}
 }

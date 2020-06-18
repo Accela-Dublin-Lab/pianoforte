@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="https://sandbox.forte.net/checkout/v2/js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>Checkout Page V2.0</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            $.ajax({
+                url: '/pianoforte/credentials&origin=https%3A%2F%2F360092a8.ngrok.io',
+                type: 'GET',
+                success: function (response) {
+                    let form = document.createElement('FORM');
+                    form.setAttribute('method', 'POST');
+                    form.setAttribute('action', 'https://sandbox.forte.net/checkout-2/');
+                    form.setAttribute('enctype', 'application/x-www-form-urlencoded');
+
+                    form.appendChild(createInput('api_access_id',response["apiAccessId"]));
+                    form.appendChild(createInput('total_amount',response["amount"]));
+                    form.appendChild(createInput('method',response["method"]));
+                    form.appendChild(createInput('version_number',response["versionNumber"]));
+                    form.appendChild(createInput('location_id',response["locationId"]));
+                    form.appendChild(createInput('utc_time',response["utcTime"]));
+                    form.appendChild(createInput('order_number',response["orderNumber"]));
+                    form.appendChild(createInput('signature',response["signature"]));
+
+                    form.appendChild(createInput('billing_name','Dan Connor'));
+                    form.appendChild(createInput('billing_street_line1','Dan Connor'));
+                    form.appendChild(createInput('billing_postal_code','Dan Connor'));
+                    form.appendChild(createInput('billing_country','USA'));
+
+                    let button = document.createElement("button");
+                    button.innerHTML = "Pay Now";
+                    button.type = "Submit";
+                    form.appendChild(button);
+                    $("#button-position").append(form);
+                }
+            });
+            function createInput(name,value) {
+                let input = document.createElement('input');
+                input.name = name;
+                input.value = value;
+                input.type = 'hidden';
+                return input;
+            }
+        } </script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div>
+                                    <button api_access_id="570930c741e4998f8679efa361e0c309"
+                                            method="sale"
+                                            version_number="2.0"
+                                            location_id="251336"
+                                            utc_time="637227298577130000"
+                                            hash_method="md5"
+                                            signature="12fc572d08e2f6cd1eebef78e61dec8c"
+                                            total_amount="10.00"
+                                            order_number="1587133057713">
+                                        Pay Forte</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="button-position"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

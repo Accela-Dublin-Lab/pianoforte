@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.time.OffsetDateTime;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -27,14 +28,14 @@ public class RequestFormBuilder {
             final Supplier<OffsetDateTime> timestamper, final AppConfig config) {
         this.timestamper = timestamper;
         this.config = config;
-        this.securityKey = config.getSecurityKey();
-        this.apiLoginId = config.getApiLoginId();
+        this.securityKey = config.getApiSecureKey();
+        this.apiLoginId = config.getApiAccessKey();
         this.apiVersion = config.getApiVersion();
         this.returnUrl = config.getBaseUrl() + config.getRestBase() + config.getRestReturnUrl();
     }
 
     public Map<String,String> build(final Request request) {
-        final String transactionType = config.mapTransactionType(request.getTransactionType());
+        final String transactionType = "sale";
         final String utcTime = UTCTicks.getUtcTime(timestamper.get()).toString();
         final String pgTsHash = calculateHash(
                 apiLoginId, transactionType, request.getAmount().toString(), utcTime,
@@ -42,27 +43,32 @@ public class RequestFormBuilder {
         final String completionUrl = String.format("%s/complete/%s",
                 request.getClientLocation(), urlencoder.apply(request.getTransactionId().toString()));
         return ImmutableMap.<String, String>builder()
-                .put("pg_billto_postal_name_first", orBlank.apply(request.getPersonalName().getFirstName()))
-                .put("pg_billto_postal_name_last", orBlank.apply(request.getPersonalName().getLastName()))
-                .put("pg_billto_postal_name_company", orBlank.apply(request.getContact().getCompany()))
-                .put("pg_billto_postal_street_line1", request.getContact().getStreet1())
-                .put("pg_billto_postal_street_line2", orBlank.apply(request.getContact().getStreet2()))
-                .put("pg_billto_postal_city", request.getContact().getCity())
-                .put("pg_billto_postal_stateprov", request.getContact().getState())
-                .put("pg_billto_postal_postalcode", request.getContact().getPostCode())
-                .put("pg_billto_telecom_phone_number", orBlank.apply(request.getContact().getTelephone()))
-                .put("pg_billto_online_email", orBlank.apply(request.getContact().getEmail()))
-                .put("pg_api_login_id",apiLoginId)
-                .put("pg_transaction_type", transactionType)
-                .put("pg_version_number", apiVersion)
-                .put("pg_total_amount", request.getAmount().toString())
-                .put("pg_utc_time", utcTime)
-                .put("pg_transaction_order_number", request.getTransactionId().toString())
-                .put("pg_ts_hash", pgTsHash)
-                .put("pg_return_url", returnUrl)
-                .put("pg_continue_url", completionUrl)
-                .put("pg_cancel_url", completionUrl)
-                .put("pg_return_method", "AsyncPost")
+                .put("request_id", UUID.randomUUID().toString())
+                .put("version_number", apiVersion)
+                .put("api_access_id",apiLoginId)
+                .put("allowed_methods", "visa,mast,disc,amex,echeck")
+                .put("total_amount", request.getAmount().toString())
+                .put("method", transactionType)
+                .put("utc_time", utcTime)
+                .put("signature", pgTsHash)
+                .put("hash_method", "md5")
+                .put("location_id", config.getApiLocationId())
+                .put("order_number", request.getTransactionId().toString())
+                .put("billing_name", String.format("%s %s",
+                        orBlank.apply(request.getPersonalName().getFirstName()),
+                        orBlank.apply(request.getPersonalName().getLastName())))
+                .put("billing_company_name", orBlank.apply(request.getContact().getCompany()))
+                .put("billing_street_line1", request.getContact().getStreet1())
+                .put("billing_street_line", orBlank.apply(request.getContact().getStreet2()))
+                .put("billing_locality", request.getContact().getCity())
+                .put("billing_region", request.getContact().getState())
+                .put("billing_postal_code", request.getContact().getPostCode())
+                .put("billing_phone_number", orBlank.apply(request.getContact().getTelephone()))
+                .put("billing_email_address", orBlank.apply(request.getContact().getEmail()))
+                .put("return_url", returnUrl)
+                .put("return_method", "AsyncPost")
+                //.put("pg_continue_url", completionUrl)
+                //.put("pg_cancel_url", completionUrl)
                 .build();
     }
 
@@ -72,10 +78,10 @@ public class RequestFormBuilder {
     private static final Function<String,String> urlencoder = value ->
             Try.of(() -> URLEncoder.encode(value, "UTF-8")).getOrElse(value);
 
-    private String calculateHash(final String userId, final String txType, final String amount,
-                                 final String utcTimestamp, final URI txOrderNb, final String version) {
+    private String calculateHash(final String accessId, final String txType, final String amount,
+                                 final String timestamp, final URI txOrderNb, final String version) {
         return HMacMD5.getHmacMD5(String.join("|", ImmutableList.<String>builder()
-                .add(userId, txType, version, amount, utcTimestamp, txOrderNb.toString())
+                .add(accessId, txType, version, amount, timestamp, txOrderNb.toString(), "", "")
                 .build()), securityKey);
     }
 }
