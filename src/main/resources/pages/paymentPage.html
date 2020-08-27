@@ -171,6 +171,7 @@
 
     function doRedirect() {
         return function (response) {
+            console.log("redirect response:"+JSON.stringify(response));
             let frame = document.createElement("IFRAME");
             frame.setAttribute('id', 'redirect-frame');
             frame.setAttribute('name', 'redirect-frame');
@@ -243,16 +244,24 @@
             });
             if(isValid) {
                 $.ajax({
-                    url: '/pianoforte/api/payment/checkout',
+                    //url: 'http://accela-payment.azurewebsites.net/payment-adapter/api/checkout/form',
+                    url: 'http://localhost:8080/payment-adapter/api/checkout/form',
+                    //url: '/pianoforte/api/payment/checkout',
                     type: 'POST',
+                    headers: {
+                        'Environment' : 'DEVINT'
+                    },
                     contentType: 'application/json; charset=UTF-8',
                     data: JSON.stringify({
                         personalName: {
                             firstName: $('#firstName').val(),
                             lastName: $('#lastName').val()
                         },
-                        amount: $('#amount').val(),
-                        transactionType: $('#transaction-type').val(),
+                        //amount:  $('#amount').val(),
+                        amount: {
+                            subTotal: $('#amount').val(),
+                            convFee: 2.50
+                        },
                         contact: {
                             company: $('#company').val(),
                             street1: $('#streetAddress1').val(),
@@ -263,9 +272,11 @@
                             telephone: $('#phone').val(),
                             email: $('#email').val()
                         },
-                        transactionId: "urn:"+$('#agency').val()+":transaction-id:"+Date.now(),
-                        clientLocation: window.location.protocol
-                            + "//" + window.location.host + window.location.pathname
+                        purpose: [
+                            "Transaction fees"
+                        ],
+                        paymentType: $('#transaction-type').val(),
+                        transactionId: "urn:"+$('#agency').val()+":transaction-id:aa:"+Date.now()
                     }),
                     success: doRedirect(),
                     error: function (XMLHttpRequest, textStatus, errorThrown) {

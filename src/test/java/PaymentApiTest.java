@@ -1,5 +1,5 @@
-import com.accela.pianoforte.routes.ApiRoute;
 import com.accela.pianoforte.main.AppConfig;
+import com.accela.pianoforte.routes.ApiRoute;
 import io.vavr.control.Try;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;

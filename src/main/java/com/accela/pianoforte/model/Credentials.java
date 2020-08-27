@@ -3,9 +3,6 @@ package com.accela.pianoforte.model;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.math.BigDecimal;
-import java.net.URI;
-
 @Getter
 @Builder
 public class Credentials {

@@ -1,7 +1,5 @@
 package com.accela.pianoforte.routes;
 
-import com.accela.pianoforte.model.Credentials;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.slf4j.Logger;

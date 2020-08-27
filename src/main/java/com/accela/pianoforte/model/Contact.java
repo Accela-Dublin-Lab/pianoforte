@@ -1,7 +1,7 @@
 package com.accela.pianoforte.model;
 
-import lombok.Getter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter

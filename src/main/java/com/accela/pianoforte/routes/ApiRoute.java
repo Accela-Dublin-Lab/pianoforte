@@ -2,10 +2,15 @@ package com.accela.pianoforte.routes;
 
 import com.accela.pianoforte.main.AppConfig;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import static org.apache.camel.Exchange.CONTENT_TYPE;
@@ -26,6 +31,16 @@ public class ApiRoute extends RouteBuilder {
                 .port(appConfig.getRestLocalPort());
 
         rest("/").id("home")
+                .post("/payments")
+                    .to("direct:payments")
+                .post("/authenticate")
+                    .to("direct:authenticate")
+                .get("/configuration/{adapter-id}")
+                    .to("direct:configuration")
+                .put("/organizations/{org-id}/locations/{loc-id}/transactions/{trans-id}")
+                    .to("direct:void")
+                .post("/response")
+                    .to("direct:response")
                 .get("/checkout")
                     .to("direct:checkout-page")
                 .get("/credentials")
@@ -50,6 +65,59 @@ public class ApiRoute extends RouteBuilder {
                     .to("direct:payment-response")
                 .get("/transaction/{id}")
                     .to("direct:transaction-query");
+
+        from("direct:authenticate")
+            .convertBodyTo(String.class)
+            .log(LoggingLevel.INFO, "com.accela", "authenticate", "${body}")
+            .setBody(constant("{\"status\":200,\"result\":\"234523452345234534523452345234523452345\"}"))
+            .log(LoggingLevel.INFO, "com.accela", "authenticate", "${body}");
+        
+        from("direct:configuration")
+            .convertBodyTo(String.class)
+            .log(LoggingLevel.INFO, "com.accela", "configuration", "${headers.adapter-id}")
+            .process(exch -> {
+                exch.getMessage().setBody(loadResource("agencyConfig.json"));
+            })
+            .log(LoggingLevel.INFO, "com.accela", "configuration", "${body}");
+
+        from("direct:response")
+            .convertBodyTo(String.class)
+            .log(LoggingLevel.INFO, "com.accela", "response", "${body}")
+            .log(LoggingLevel.INFO, "com.accela", "auth-header", "Authorization=${headers.Authorization}")
+            .process(exch -> exch.getIn().getHeaders().forEach((k,v) ->
+                System.out.println(">>> "+k+" => "+v)))
+            .setBody(constant("{\"status\":200,\"message\":\"OK\"}"))
+            .log(LoggingLevel.INFO, "com.accela", "configuration", "${body}");
+
+        from("direct:payments")
+            .convertBodyTo(String.class)
+            .log(LoggingLevel.INFO, "com.accela", "${body}");
+
+        from("direct:void")
+            .log(LoggingLevel.INFO, "com.accela", "void", "OrgId: ${headers.org-id}")
+            .log(LoggingLevel.INFO, "com.accela", "void", "LocId: ${headers.loc-id}")
+            .log(LoggingLevel.INFO, "com.accela", "void", "TrnId: ${headers.trans-id}")
+            .convertBodyTo(String.class)
+            .log(LoggingLevel.INFO, "com.accela", "void-transaction", "${body}")
+            .setBody(constant("{" +
+                "  \"transaction_id\": \"trn_aa785423-9f87-4177-b88c-0966ce7e7d93\"," +
+                "  \"location_id\": \"loc_251336\"," +
+                "  \"action\": \"void\"," +
+                "  \"authorization_code\": \"2TI295\"," +
+                "  \"entered_by\": \"Martin Heidegger\"," +
+                "  \"response\": {" +
+                "    \"environment\": \"sandbox\"," +
+                "    \"response_type\": \"A\"," +
+                "    \"response_code\": \"A01\"," +
+                "    \"response_desc\": \"APPROVED\"," +
+                "    \"authorization_code\": \"40832334\"" +
+                "  }," +
+                "  \"links\": {" +
+                "    \"disputes\": \"https://sandbox.forte.net/API/v3/transactions/trn_5e722288-3bd0-4421-821d-b660db86a5e5/disputes\"," +
+                "    \"settlements\": \"https://sandbox.forte.net/API/v3/transactions/trn_5e722288-3bd0-4421-821d-b660db86a5e5/settlements\"," +
+                "    \"self\": \"https://sandbox.forte.net/API/v3/transactions/trn_5e722288-3bd0-4421-821d-b660db86a5e5/\"" +
+                "  }" +
+                "}"));
 
         from("direct:checkout-page")
                 .setProperty("asset", constant("pages/paymentPage.html"))
@@ -93,6 +161,10 @@ public class ApiRoute extends RouteBuilder {
                 .map(asset -> ApiRoute.class.getClassLoader().getResourceAsStream(asset))
                 .orElse(new ByteArrayInputStream(page404.getBytes()));
         exchange.getMessage().setBody(assetStream, InputStream.class);
+    }
+
+    private static byte[] loadResource(final String path) throws URISyntaxException, IOException {
+        return Files.readAllBytes(Paths.get(ApiRoute.class.getClassLoader().getResource(path).toURI()));
     }
 
 }

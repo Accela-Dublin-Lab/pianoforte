@@ -2,7 +2,7 @@
     <appender name="STDOUT" target="System.out" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern><![CDATA[
-             %d | %contextName | %14.14thread | %5.5level | %class{36}.%M | %msg %n
+             %d | %contextName | %14.14thread | %5.5level |  %16.16marker | %class{36}.%M | %msg %n
            ]]></pattern>
         </encoder>
     </appender>
