@@ -1,4 +1,4 @@
-package com.accela.pianoforte.main;
+package config;
 
 import io.vavr.control.Try;
 
@@ -16,6 +16,11 @@ public class AppConfig {
     public static final String REST_BASE = "rest-base";
     public static final String REST_CHECKOUT_PAYMENT = "rest-checkout-payment";
     public static final String REST_RETURN_URL = "rest-return-url";
+
+    public static final String PAYPAL_URL = "paypal.url";
+    public static final String PAYPAL_ACCOUNT_ID = "paypal.account.id";
+    public static final String PAYPAL_CLIENT_ID = "paypal.client.id";
+
     private final Properties appProps;
 
     public AppConfig(final String propertyFile) {
@@ -80,5 +85,15 @@ public class AppConfig {
 
     public String getResponseDescription(final String code) {
         return appProps.getProperty("forte.response.code."+code, "("+code+" is undefined)");
+    }
+
+    public String getPayPalUrl() {
+        return appProps.getProperty(PAYPAL_URL, "");
+    }
+    public String getPayPalClientId() {
+        return appProps.getProperty(PAYPAL_CLIENT_ID, "");
+    }
+    public String getPayPalAccountId() {
+        return appProps.getProperty(PAYPAL_ACCOUNT_ID, "");
     }
 }

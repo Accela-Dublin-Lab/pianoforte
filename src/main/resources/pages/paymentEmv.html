@@ -1,0 +1,258 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/pianoforte/css/form.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>EMV Checkout Page</title>
+</head>
+<body>
+<div class="wrapper">
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <b>Kindle County</b>
+            <p>118 N Kindle St, Chicago, IL 60600</p>
+        </div>
+        <ul class="list-unstyled components">
+            <li class="option">Summary</li>
+            <li class="option">Record</li>
+            <li class="option">Status</li>
+            <li class="option">Activities (0)</li>
+            <li class="option">Workflow</li>
+            <li class="option">Inspections (6)</li>
+            <li class="option">Fee (1)</li>
+            <li class="selected">Payment</li>
+            <li class="option">Contacts (1)</li>
+            <li class="option">Professionals (0)</li>
+            <li class="option">Communications)</li>
+            <li class="option">Renewal Info</li>
+        </ul>
+    </nav>
+    <div class="container">
+        <table style="width: 400px">
+            <tbody>
+            <tr>
+                <td style="width: 35%" class="align-middle">
+                    <img id="accela-logo" src="/pianoforte/image/accela.png"/>
+                </td>
+                <td style="width: 22%; padding-top: 14px" class="align-bottom">
+                    <p>Civic Platform</p>
+                </td>
+                <td style="width: 5%; padding-top: 14px" class="align-bottom">
+                    <p>&gt;</p>
+                </td>
+                <td style="width: 30%; padding-top: 14px" class="align-bottom">
+                    <p class="label-bold">STANDARDTEST</p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12 alert alert-info">
+                            <div class="glyphicon glyphicon-info-sign">
+                                <b class="alert-info">Payment Test Client</b>
+                            </div>
+                            <div>
+
+                                <p>
+                                    This is a surrogate for the Civic Platform used to test the Payment Adapter.
+                                    No payment will be made, but only test details should be entered (e.g., credit-
+                                    card numbers, phone numbers) as data will be sent to an external site.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary dropdown-toggle box-shadow" type="button"
+                            data-toggle="dropdown" id="post-menu">
+                        Menu
+                        <span class="caret"></span>
+                    </button>
+                    <button type="submit" class="btn btn-primary box-shadow" id="post-payment">Submit</button>
+                    <button type="reset" class="btn btn-primary box-shadow" id="post-reset"
+                            onclick="clearForm()">Reset</button>
+                    <button type="cancel" class="btn btn-primary box-shadow" id="post-cancel">Cancel</button>
+                    <button type="help" class="btn btn-primary box-shadow" id="post-help">Help</button>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form id="payment-form" role="form">
+                                <div class="row">
+                                    <div class="form-group col-md-2">
+                                        <label for="amount" class="required-label">Amount</label>
+                                        <input type="number" min="1" step="any" class="form-control" name="amount"
+                                               required="required" id="amount" placeholder="0.00"/>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="transaction-type" class="required-label">Payment Type</label>
+                                        <select class="form-control browser-default custom-select" id="transaction-type">
+                                            <option value="CC" selected>Credit Card</option>
+                                            <option value="EC">eCheck</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="card-present" class="form-check-label">Card Present</label>
+                                        <input type="checkbox" class="form-check-input" id="card-present">
+                                    </div>
+                                    <div class="form-group col-md-2" id="paynow-insert">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="firstName" class="control-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" name="firstName"
+                                               autocomplete="given-name"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="lastName" class="control-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" name="lastName"
+                                               autocomplete="family-name"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="firstName" class="control-label">Business Name</label>
+                                        <input type="text" class="form-control" id="company" name="company"
+                                               autocomplete="organization"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="lastName" class="required-label">Street Address</label>
+                                        <input type="text" class="form-control" id="streetAddress1"
+                                               name="streetAddress1" autocomplete="address-line1"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="lastName" class="control-label">Street Address2</label>
+                                        <input type="text" class="form-control" id="streetAddress2"
+                                               name="streetAddress2" autocomplete="address-line2"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="lastName" class="required-label">City</label>
+                                        <input type="text" class="form-control" id="city" name="city"
+                                               autocomplete="address-level2"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="firstName" class="required-label">State/Province</label>
+                                        <input type="text" class="form-control" id="state" name="state"
+                                               autocomplete="address-level1"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="lastName" class="required-label">Zip</label>
+                                        <input type="text" class="form-control" id="zip" name="zip"
+                                               autocomplete="postal-code"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="lastName" class="control-label">Telephone</label>
+                                        <input type="text" class="form-control" id="phone" name="phone"
+                                               autocomplete="tel"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="firstName" class="control-label">Card Holder's E-mail</label>
+                                        <input type="text" class="form-control" id="email" name="email"
+                                               autocomplete="email"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="agency" class="control-label">Comment</label>
+                                        <textarea class="form-control"
+                                                  id="agency" name="agency"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('select[id="transaction-type"]').change(function () {
+            $('input[id="card-present"]').prop('disabled', this.value != "CC");
+        });
+    });
+
+    function doRedirect() {
+        return function (response) {
+            if ($('button[id="paynow-button"]').length === 0) {
+                $('div[id="paynow-insert"]').append(response)
+                let button = document.getElementById("button#paynow-button.fortebtn");
+                console.log( ">>> button="+JSON.stringify(button, null, 4));
+                //button.hide();
+            } else {
+                $('button[id="paynow-button"]').replace(response);
+            }
+        };
+    }
+
+    $(document).ready(function () {
+        $('#post-payment').on('click', function (event) {
+            event.preventDefault();
+            let isValid = true;
+            $('input,textarea,select').filter('[required]:visible').each(function() {
+                if ( $(this).val() === '' )
+                    isValid = false;
+            });
+            if(isValid) {
+                let cardReader = "none";
+                if($('input[id="card-present"]').is(':checked')) {
+                    cardReader = "VX520";
+                }
+                $.ajax({
+                    //url: 'http://10.0.2.2:8080/payment-adapter/api/checkout/form',
+                    url: 'http://localhost:8080/payment-adapter/api/checkout/form',
+                    type: 'POST',
+                    headers: {
+                        'Environment':'test',
+                        'Content-Type':'application/json'
+                    },
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify({
+                        personalName: {
+                            firstName: $('#firstName').val(),
+                            lastName: $('#lastName').val()
+                        },
+                        amount: {
+                            subTotal: $('#amount').val()
+                        },
+                        paymentType: $('#transaction-type').val(),
+                        contact: {
+                            company: $('#company').val(),
+                            street1: $('#streetAddress1').val(),
+                            street2: $('#streetAddress2').val(),
+                            city: $('#city').val(),
+                            state: $('#state').val(),
+                            postCode: $('#zip').val(),
+                            telephone: $('#phone').val(),
+                            email: $('#email').val()
+                        },
+                        transactionId: "urn:"+$('#agency').val()+":transaction-id:aa:"+Date.now(),
+                        callbackUri: window.location.protocol
+                            + "//" + window.location.host + window.location.pathname,
+                        cardReader: cardReader
+                    }),
+                    success: doRedirect(),
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log(
+                            "error posting payment form, " + textStatus + ": " + errorThrown);
+                    }
+                });
+            } else {
+                alert('required fields missing, please complete and re-submit');
+            }
+        });
+    });
+    function clearForm() {
+        $("#payment-form").trigger("reset");
+    }
+</script>
+
+</body>
+</html>

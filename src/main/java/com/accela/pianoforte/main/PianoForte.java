@@ -4,6 +4,7 @@ import com.accela.pianoforte.routes.ApiRoute;
 import com.accela.pianoforte.routes.PaymentRoute;
 import com.accela.pianoforte.routes.Processors;
 import com.accela.pianoforte.services.TransactionStore;
+import config.AppConfig;
 import org.apache.camel.main.Main;
 
 import java.time.OffsetDateTime;
@@ -19,6 +20,5 @@ public class PianoForte {
         routes.addRoutesBuilder(new ApiRoute(appConfig));
         routes.start();
     }
-
 
 }

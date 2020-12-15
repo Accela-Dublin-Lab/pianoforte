@@ -1,6 +1,7 @@
 package com.accela.pianoforte.routes;
 
-import com.accela.pianoforte.main.AppConfig;
+import com.github.mustachejava.Mustache;
+import config.AppConfig;
 import com.accela.pianoforte.model.*;
 import com.accela.pianoforte.services.TransactionStore;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,6 +39,11 @@ public class Processors {
         this.store = store;
         this.appConfig = appConfig;
         formBuilder = new RequestFormBuilder(timestamper, appConfig);
+    }
+
+    protected void toEMVQuery(final Exchange exchange) {
+        exchange.getMessage().setHeader("accountId", appConfig.getPayPalAccountId());
+        exchange.getMessage().setHeader("clientId", appConfig.getPayPalClientId());
     }
 
     protected void toRedirectQuery(final Exchange exchange) {

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static org.apache.http.entity.ContentType.TEXT_HTML;
 
 public class PaymentRoute extends RouteBuilder {
     private static final Logger logger = LoggerFactory.getLogger(PaymentRoute.class);
@@ -19,6 +20,12 @@ public class PaymentRoute extends RouteBuilder {
     @Override
     public void configure() {
         getContext().getGlobalOptions().put("CamelJacksonEnableTypeConverter", "true");
+
+        from("direct:checkout-emv").routeId("checkout-emv")
+                .process(processors::toEMVQuery)
+                .to("log:com.accela?level=INFO&showAll=true")
+                .to("mustache:paypal-emv.mustache")
+                .setHeader(CONTENT_TYPE, constant(TEXT_HTML));
 
         from("direct:payment-checkout").routeId("checkout")
                 .process(processors::toRedirectQuery)

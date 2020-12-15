@@ -25,8 +25,12 @@ dependencies {
     implementation "org.apache.camel:camel-jetty:${camelVersion}"
     implementation "org.apache.camel:camel-http:${camelVersion}"
     implementation "org.apache.camel:camel-jackson:${camelVersion}"
+    implementation "org.apache.camel:camel-mustache:${camelVersion}"
+    implementation 'com.github.spullara.mustache.java:compiler:0.9.4'
     implementation "com.google.guava:guava:28.2-jre"
+    implementation 'org.apache.commons:commons-collections4:4.1'
     implementation "io.vavr:vavr:0.10.2"
+    implementation 'com.itextpdf:itextpdf:5.5.10'
     implementation "ch.qos.logback:logback-classic:1.2.3"
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'

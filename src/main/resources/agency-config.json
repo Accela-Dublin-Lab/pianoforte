@@ -1,0 +1,25 @@
+{
+  "status": 200,
+  "message": "Success",
+  "timestamp": "2020-07-30T14:20:55.147Z",
+  "adapterConfigurations": [
+    {
+      "adapterId": "STANDARDTEST-PAYMENT-PAYMENT_ADAPTER_CONFIG_AA-CIVICPLATFORM-DEVINT",
+      "agencyName": "STANDARDTEST",
+      "adapterName": "PAYMENT_ADAPTER_CONFIG_AA",
+      "adapterCategory": "PAYMENT",
+      "applicationName": "CIVICPLATFORM",
+      "environmentName": "DEV",
+      "standardAdapter": true,
+      "enabled": true,
+      "info": "This is a test",
+      "configurationData": {
+        "agency.providers.PAYMENT.providerId": "urn:provider-id:forte",
+        "agency.providers.PAYMENT.properties.organizationId": "336711",
+        "agency.providers.PAYMENT.properties.locationId": "153757",
+        "agency.providers.PAYMENT.properties.apiLoginId":"a5cbf9d93da05ab53d6962856155a8d5",
+        "agency.providers.PAYMENT.properties.responseSigningPK": "AD6cNaWFoDla5VXqN2clfJjkGnCo6TNc"
+      }
+    }
+  ]
+}

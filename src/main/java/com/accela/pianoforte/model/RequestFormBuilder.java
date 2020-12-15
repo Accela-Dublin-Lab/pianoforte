@@ -2,7 +2,7 @@ package com.accela.pianoforte.model;
 
 import com.accela.pianoforte.common.HMacMD5;
 import com.accela.pianoforte.common.UTCTicks;
-import com.accela.pianoforte.main.AppConfig;
+import config.AppConfig;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
