@@ -15,10 +15,12 @@
       "info": "This is a test",
       "configurationData": {
         "agency.providers.PAYMENT.providerId": "urn:provider-id:forte",
-        "agency.providers.PAYMENT.properties.organizationId": "336711",
-        "agency.providers.PAYMENT.properties.locationId": "153757",
-        "agency.providers.PAYMENT.properties.apiLoginId":"a5cbf9d93da05ab53d6962856155a8d5",
-        "agency.providers.PAYMENT.properties.responseSigningPK": "AD6cNaWFoDla5VXqN2clfJjkGnCo6TNc"
+        "agency.providers.PAYMENT.properties.organizationId": "235713",
+        "agency.providers.PAYMENT.properties.locationId": "396559",
+        "agency.providers.PAYMENT.properties.locationid_building": "396560",
+        "agency.providers.PAYMENT.properties.accessId":"92ac6cce0022b6a2ba619706e065e5da",
+        "agency.providers.PAYMENT.properties.securityKey": "6c5ed1e1cb574a3823a5dfb1e0576580",
+        "agency.providers.PAYMENT.properties.responseSecureKey": "98f3a5801a8746d76c1cdf962c39eee7"
       }
     }
   ]
